@@ -118,7 +118,7 @@ final LazySeq<Integer> ints = LazySeq.iterate(2, n -> n + 1);
 
 We start from `2` and each subsequent element is represented as previous element + 1.
 
-### More examples: Fibonacci sequence and Collatz conjecture
+### More examples: Fibonacci sequence, sieve and Collatz conjecture
 
 No article about lazy data structure can be left without [Fibonacci numbers](http://en.wikipedia.org/wiki/Fibonacci_number) example:
 
@@ -154,6 +154,23 @@ See how easy and natural it is to work with infinite stream of numbers? `drop(5)
 Finding first Fibonacci number above 1000 (happens to be `1597`) is very straightforward. `head()` is always precomputed by `filter()` , so no further evaluation is needed. Last but not least we can simply just ask for [45th Fibonacci number](http://www.maths.surrey.ac.uk/hosted-sites/R.Knott/Fibonacci/fibtable.html) (0-based) and get `1134903170`. If you ever try to access any Fibonacci number up to this one, they are precomputed and fast to retrieve.
 
 ---
+
+#### sieve
+Prime numbers lazy sequenze
+
+```
+        LazySeq<Integer> ints = integers(2);
+        LazySeq primes = sieve(ints);
+        primes.take(10).forEach(p -> System.out.println(p));
+
+    private static LazySeq<Integer> sieve(LazySeq<Integer> s) {
+        return LazySeq.cons(s.head(), () -> sieve(s.filter(x -> x % s.head() != 0)));
+    }
+
+    private static LazySeq<Integer> integers(int from) {
+        return LazySeq.cons(from, () -> integers(from + 1));
+    }
+```
 
 #### Finite sequences (Collatz conjecture)
 
